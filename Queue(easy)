@@ -1,0 +1,37 @@
+typedef struct {
+int* timestamps;
+int front;
+int rear;
+} RecentCounter;
+RecentCounter* recentCounterCreate() {
+RecentCounter* obj = (RecentCounter*)malloc(sizeof(RecentCounter));
+obj->timestamps = (int*)malloc(sizeof(int) * 10000); // Assuming at most 10000
+requests
+obj->front = 0;
+obj->rear = -1;
+return obj;
+}
+void enqueue(RecentCounter* obj, int t) {
+obj->rear++;
+obj->timestamps[obj->rear] = t;
+}
+void dequeueOldRequests(RecentCounter* obj, int t) {
+while (obj->front <= obj->rear && obj->timestamps[obj->front] < t - 3000) {
+obj->front++;
+}
+}
+int recentCounterPing(RecentCounter* obj, int t) {
+enqueue(obj, t);
+dequeueOldRequests(obj, t);
+return obj->rear - obj->front + 1;
+}
+void recentCounterFree(RecentCounter* obj) {
+free(obj->timestamps);
+free(obj);
+}
+/**
+* Your RecentCounter struct will be instantiated and called as such:
+* RecentCounter* obj = recentCounterCreate();
+* int param_1 = recentCounterPing(obj, t);
+* recentCounterFree(obj);
+*/
