@@ -1,0 +1,46 @@
+#include <stdlib.h>
+typedef struct {
+int temperature;
+int index;
+} Pair;
+typedef struct {
+Pair *array;
+int capacity;
+int size;
+} Stack;
+Stack* createStack(int capacity) {
+Stack* stack = (Stack*)malloc(sizeof(Stack));
+stack->capacity = capacity;
+stack->size = 0;
+stack->array = (Pair*)malloc(stack->capacity * sizeof(Pair));
+return stack;
+}
+void push(Stack* stack, Pair item) {
+stack->array[stack->size++] = item;
+}
+Pair pop(Stack* stack) {
+return stack->array[--stack->size];
+}
+int isEmpty(Stack* stack) {
+return stack->size == 0;
+}
+int* dailyTemperatures(int* temperatures, int temperaturesSize, int* returnSize) {
+*returnSize = temperaturesSize;
+int* answer = (int*)malloc(temperaturesSize * sizeof(int));
+Stack* stack = createStack(temperaturesSize);
+for (int i = 0; i < temperaturesSize; ++i) {
+while (!isEmpty(stack) && temperatures[i] > stack->array[stack->size -1].temperature) {
+Pair top = pop(stack);
+answer[top.index] = i - top.index;
+}
+Pair p = {temperatures[i], i};
+push(stack, p);
+}
+while (!isEmpty(stack)) {
+Pair top = pop(stack);
+answer[top.index] = 0;
+}
+free(stack->array);
+free(stack);
+return answer;
+}
