@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <stdlib.h>
+int minimumCoins(int* prices, int pricesSize) {
+long coins = 0; // Total coins needed
+long long offerEnd = 0; // Index where the current offer
+ends (using long long to avoid overflow)
+int i = 0; // Index to iterate through prices array
+while (i < pricesSize) {
+int currentPrice = prices[i]; // Price of the current
+fruit
+long long offerValidUntil = offerEnd; // The last
+index where the current offer is still valid
+while (i <= offerValidUntil && i < pricesSize) {
+// Determine the end index of the current offer
+if (i + prices[i] - 1 > offerEnd) {
+offerEnd = i + prices[i] - 1; // Corrected the
+update of offerEnd
+}
+// Move to the next fruit
+i++;
+}
+// Increment the total coins needed
+coins += currentPrice;
+}
+return coins;
+}
